@@ -87,7 +87,7 @@ static int crl_parse_entry_extensions(X509_CRL *crl) {
     }
 
     if (reason) {
-      rev->reason = ASN1_ENUMERATED_get(reason);
+      rev->reason = (int)ASN1_ENUMERATED_get(reason);
       ASN1_ENUMERATED_free(reason);
     } else {
       rev->reason = CRL_REASON_NONE;

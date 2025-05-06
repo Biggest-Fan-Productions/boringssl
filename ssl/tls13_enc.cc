@@ -236,7 +236,7 @@ namespace {
 class AESRecordNumberEncrypter : public RecordNumberEncrypter {
  public:
   bool SetKey(Span<const uint8_t> key) override {
-    return AES_set_encrypt_key(key.data(), key.size() * 8, &key_) == 0;
+    return AES_set_encrypt_key(key.data(), (int)key.size() * 8, &key_) == 0;
   }
 
   bool GenerateMask(Span<uint8_t> out, Span<const uint8_t> sample) override {

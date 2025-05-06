@@ -94,7 +94,7 @@ void ASN1_item_ex_free(ASN1_VALUE **pval, const ASN1_ITEM *it) {
       // If we free up as normal we will invalidate any ANY DEFINED BY
       // field and we wont be able to determine the type of the field it
       // defines. So free up in reverse order.
-      for (int i = it->tcount - 1; i >= 0; i--) {
+      for (long i = it->tcount - 1; i >= 0; i--) {
         const ASN1_TEMPLATE *seqtt = asn1_do_adb(pval, &it->templates[i], 0);
         if (!seqtt) {
           continue;

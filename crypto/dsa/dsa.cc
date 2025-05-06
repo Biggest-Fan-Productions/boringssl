@@ -312,7 +312,7 @@ int DSA_generate_parameters_ex(DSA *dsa, unsigned bits, const uint8_t *seed_in,
         }
 
         // step 8
-        if (!BN_bin2bn(md, qsize, r0) || !BN_lshift(r0, r0, (qsize << 3) * k) ||
+        if (!BN_bin2bn(md, qsize, r0) || !BN_lshift(r0, r0, (int)((qsize << 3) * k)) ||
             !BN_add(W, W, r0)) {
           return 0;
         }
@@ -842,7 +842,7 @@ int DSA_size(const DSA *dsa) {
   if (ret < value_len) {
     return 0;
   }
-  return ret;
+  return (int)ret;
 }
 
 static int dsa_sign_setup(const DSA *dsa, BN_CTX *ctx, BIGNUM **out_kinv,

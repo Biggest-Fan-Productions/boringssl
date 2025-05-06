@@ -61,7 +61,7 @@ void slhdsa_xmss_sign(uint8_t sig[SLHDSA_SHA2_128S_XMSS_BYTES],
   for (size_t j = 0; j < SLHDSA_SHA2_128S_TREE_HEIGHT; ++j) {
     unsigned int k = (idx >> j) ^ 1;
     slhdsa_treehash(sig + SLHDSA_SHA2_128S_WOTS_BYTES + j * BCM_SLHDSA_SHA2_128S_N,
-                    sk_seed, k, j, pk_seed, addr);
+                    sk_seed, k, (uint32_t)j, pk_seed, addr);
   }
 
   // Compute WOTS+ signature
@@ -88,7 +88,7 @@ void slhdsa_xmss_pk_from_sig(
   uint8_t tmp[2 * BCM_SLHDSA_SHA2_128S_N];
   const uint8_t *const auth = xmss_sig + SLHDSA_SHA2_128S_WOTS_BYTES;
   for (size_t k = 0; k < SLHDSA_SHA2_128S_TREE_HEIGHT; ++k) {
-    slhdsa_set_tree_height(addr, k + 1);
+    slhdsa_set_tree_height(addr, (uint32_t)(k + 1));
     if (((idx >> k) & 1) == 0) {
       slhdsa_set_tree_index(addr, slhdsa_get_tree_index(addr) >> 1);
       OPENSSL_memcpy(tmp, node, BCM_SLHDSA_SHA2_128S_N);
@@ -125,7 +125,7 @@ void slhdsa_ht_sign(
   for (size_t j = 1; j < SLHDSA_SHA2_128S_D; ++j) {
     idx_leaf = idx_tree % (1 << SLHDSA_SHA2_128S_TREE_HEIGHT);
     idx_tree = idx_tree >> SLHDSA_SHA2_128S_TREE_HEIGHT;
-    slhdsa_set_layer_addr(addr, j);
+    slhdsa_set_layer_addr(addr, (uint32_t)j);
     slhdsa_set_tree_addr(addr, idx_tree);
     slhdsa_xmss_sign(sig, root, idx_leaf, sk_seed, pk_seed, addr);
     if (j < (SLHDSA_SHA2_128S_D - 1)) {
@@ -151,7 +151,7 @@ int slhdsa_ht_verify(
   for (size_t j = 1; j < SLHDSA_SHA2_128S_D; ++j) {
     idx_leaf = idx_tree % (1 << SLHDSA_SHA2_128S_TREE_HEIGHT);
     idx_tree = idx_tree >> SLHDSA_SHA2_128S_TREE_HEIGHT;
-    slhdsa_set_layer_addr(addr, j);
+    slhdsa_set_layer_addr(addr, (uint32_t)j);
     slhdsa_set_tree_addr(addr, idx_tree);
 
     slhdsa_xmss_pk_from_sig(node, sig + j * SLHDSA_SHA2_128S_XMSS_BYTES,

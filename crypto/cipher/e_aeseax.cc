@@ -74,7 +74,7 @@ static int aead_aes_eax_init(EVP_AEAD_CTX *ctx, const uint8_t *key,
     return 0;
   }
 
-  if (AES_set_encrypt_key(key, /*bits=*/key_len * 8, &aes_ctx->ks.ks) != 0) {
+  if (AES_set_encrypt_key(key, (unsigned int)(/*bits=*/key_len * 8), &aes_ctx->ks.ks) != 0) {
     OPENSSL_PUT_ERROR(CIPHER, CIPHER_R_AES_KEY_SETUP_FAILED);
     return 0;
   }

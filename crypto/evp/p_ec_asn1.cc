@@ -155,7 +155,7 @@ static size_t eckey_get1_tls_encodedpoint(const EVP_PKEY *pkey,
 
 static int int_ec_size(const EVP_PKEY *pkey) {
   const EC_KEY *ec_key = reinterpret_cast<const EC_KEY *>(pkey->pkey);
-  return ECDSA_size(ec_key);
+  return (int)ECDSA_size(ec_key);
 }
 
 static int ec_bits(const EVP_PKEY *pkey) {

@@ -179,7 +179,7 @@ int DTLSv1_get_timeout(const SSL *ssl, struct timeval *out) {
   } else {
     out->tv_sec = static_cast<decltype(out->tv_sec)>(remaining_sec);
   }
-  out->tv_usec = remaining_usec;
+  out->tv_usec = (int)remaining_usec;
   return 1;
 }
 

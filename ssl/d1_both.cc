@@ -780,7 +780,7 @@ static seal_result_t seal_next_record(SSL *ssl, Span<uint8_t> out,
       if (!CBB_add_u8(&cbb, hdr.type) ||                       //
           !CBB_add_u24(&cbb, hdr.msg_len) ||                   //
           !CBB_add_u16(&cbb, hdr.seq) ||                       //
-          !CBB_add_u24(&cbb, range.start) ||                   //
+          !CBB_add_u24(&cbb, (unsigned int)range.start) ||                   //
           !CBB_add_u24_length_prefixed(&cbb, &child) ||        //
           !CBB_add_bytes(&child, frag.data(), frag.size()) ||  //
           !CBB_flush(&cbb)) {
@@ -795,7 +795,7 @@ static seal_result_t seal_next_record(SSL *ssl, Span<uint8_t> out,
       ssl_do_msg_callback(ssl, /*is_write=*/1, SSL3_RT_HANDSHAKE,
                           fragments.subspan(frag_start, frag_end - frag_start));
 
-      ssl->d1->outgoing_offset = range.start + todo;
+      ssl->d1->outgoing_offset = (unsigned int)(range.start + todo);
       if (todo < range.size()) {
         // The packet was the limiting factor.
         goto packet_full;
@@ -909,7 +909,7 @@ static int send_flight(SSL *ssl) {
     }
 
     if (packet_len != 0) {
-      int bio_ret = BIO_write(ssl->wbio.get(), packet.data(), packet_len);
+      int bio_ret = BIO_write(ssl->wbio.get(), packet.data(), (int)packet_len);
       if (bio_ret <= 0) {
         // Retry this packet the next time around.
         ssl->d1->outgoing_written = old_written;

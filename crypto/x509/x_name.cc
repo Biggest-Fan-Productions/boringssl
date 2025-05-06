@@ -218,7 +218,7 @@ static int x509_name_ex_i2d(ASN1_VALUE **val, unsigned char **out,
   if (a->modified && (!x509_name_encode(a) || !x509_name_canon(a))) {
     return -1;
   }
-  int ret = a->bytes->length;
+  int ret = (int)a->bytes->length;
   if (out != NULL) {
     OPENSSL_memcpy(*out, a->bytes->data, ret);
     *out += ret;
@@ -440,7 +440,7 @@ static int asn1_string_canon(ASN1_STRING *out, ASN1_STRING *in) {
     }
   }
 
-  out->length = to - out->data;
+  out->length = (int)(to - out->data);
 
   return 1;
 }

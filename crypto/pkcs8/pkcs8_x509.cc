@@ -1054,7 +1054,7 @@ static int add_encrypted_data(CBB *out, int pbe_nid,
   uint8_t *ptr;
   int n1, n2;
   if (!CBB_reserve(&encrypted_content, &ptr, max_out) ||
-      !EVP_CipherUpdate(ctx.get(), ptr, &n1, in, in_len) ||
+      !EVP_CipherUpdate(ctx.get(), ptr, &n1, in, (int)in_len) ||
       !EVP_CipherFinal_ex(ctx.get(), ptr + n1, &n2) ||
       !CBB_did_write(&encrypted_content, n1 + n2) || !CBB_flush(out)) {
     return 0;

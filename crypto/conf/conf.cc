@@ -173,7 +173,7 @@ static int str_copy(CONF *conf, char *section, char **pto, char *from) {
     return 0;
   }
 
-  len = strlen(from) + 1;
+  len = (int)(strlen(from) + 1);
   if (!BUF_MEM_grow(buf, len)) {
     goto err;
   }
@@ -406,7 +406,7 @@ int NCONF_load_bio(CONF *conf, BIO *in, long *out_error_line) {
     *p = '\0';
     BIO_gets(in, p, CONFBUFSIZE - 1);
     p[CONFBUFSIZE - 1] = '\0';
-    ii = i = strlen(p);
+    ii = i = (int)strlen(p);
     if (i == 0 && !again) {
       break;
     }

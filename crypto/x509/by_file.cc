@@ -38,7 +38,7 @@ static int by_file_ctrl(X509_LOOKUP *ctx, int cmd, const char *argp, long argl,
     return 0;
   }
   const char *file = argp;
-  int type = argl;
+  int type = (int)argl;
   if (argl == X509_FILETYPE_DEFAULT) {
     if ((file = getenv(X509_get_default_cert_file_env())) == NULL) {
       file = X509_get_default_cert_file();

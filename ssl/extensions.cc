@@ -1910,7 +1910,7 @@ static bool ext_pre_shared_key_add_clienthello(const SSL_HANDSHAKE *hs,
   }
 
   OPENSSL_timeval now = ssl_ctx_get_current_time(ssl->ctx.get());
-  uint32_t ticket_age = 1000 * (now.tv_sec - ssl->session->time);
+  uint32_t ticket_age = (uint32_t)(1000 * (now.tv_sec - ssl->session->time));
   uint32_t obfuscated_ticket_age = ticket_age + ssl->session->ticket_age_add;
 
   // Fill in a placeholder zero binder of the appropriate length. It will be

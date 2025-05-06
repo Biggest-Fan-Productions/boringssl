@@ -339,7 +339,7 @@ static void ecp_nistz256_windowed_mul(const EC_GROUP *group, P256_POINT *r,
   crypto_word_t wvalue = p_str[(index - 1) / 8];
   wvalue = (wvalue >> ((index - 1) % 8)) & kMask;
 
-  ecp_nistz256_select_w5(r, table, booth_recode_w5(wvalue) >> 1);
+  ecp_nistz256_select_w5(r, table, (int)(booth_recode_w5(wvalue) >> 1));
 
   while (index >= 5) {
     if (index != 255) {
@@ -350,7 +350,7 @@ static void ecp_nistz256_windowed_mul(const EC_GROUP *group, P256_POINT *r,
 
       wvalue = booth_recode_w5(wvalue);
 
-      ecp_nistz256_select_w5(&h, table, wvalue >> 1);
+      ecp_nistz256_select_w5(&h, table, (int)(wvalue >> 1));
 
       ecp_nistz256_neg(tmp, h.Y);
       copy_conditional(h.Y, tmp, (wvalue & 1));
@@ -373,7 +373,7 @@ static void ecp_nistz256_windowed_mul(const EC_GROUP *group, P256_POINT *r,
 
   wvalue = booth_recode_w5(wvalue);
 
-  ecp_nistz256_select_w5(&h, table, wvalue >> 1);
+  ecp_nistz256_select_w5(&h, table, (int)(wvalue >> 1));
 
   ecp_nistz256_neg(tmp, h.Y);
   copy_conditional(h.Y, tmp, wvalue & 1);
@@ -427,7 +427,7 @@ static void ecp_nistz256_point_mul_base(const EC_GROUP *group, EC_JACOBIAN *r,
 
   alignas(32) P256_POINT_AFFINE t;
   alignas(32) P256_POINT p;
-  ecp_nistz256_select_w7(&t, ecp_nistz256_precomputed[0], wvalue >> 1);
+  ecp_nistz256_select_w7(&t, ecp_nistz256_precomputed[0], (int)(wvalue >> 1));
   ecp_nistz256_neg(p.Z, t.Y);
   copy_conditional(t.Y, p.Z, wvalue & 1);
 
@@ -442,7 +442,7 @@ static void ecp_nistz256_point_mul_base(const EC_GROUP *group, EC_JACOBIAN *r,
   for (int i = 1; i < 37; i++) {
     wvalue = calc_wvalue(&index, p_str);
 
-    ecp_nistz256_select_w7(&t, ecp_nistz256_precomputed[i], wvalue >> 1);
+    ecp_nistz256_select_w7(&t, ecp_nistz256_precomputed[i], (int)(wvalue >> 1));
 
     alignas(32) BN_ULONG neg_Y[P256_LIMBS];
     ecp_nistz256_neg(neg_Y, t.Y);

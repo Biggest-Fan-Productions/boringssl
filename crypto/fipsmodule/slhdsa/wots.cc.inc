@@ -37,7 +37,7 @@ static void chain(uint8_t output[BCM_SLHDSA_SHA2_128S_N],
 
   for (size_t i = start; i < (start + steps) && i < SLHDSA_SHA2_128S_WOTS_W;
        ++i) {
-    slhdsa_set_hash_addr(addr, i);
+    slhdsa_set_hash_addr(addr, (uint32_t)i);
     slhdsa_thash_f(output, output, pub_seed, addr);
   }
 }
@@ -69,7 +69,7 @@ void slhdsa_wots_pk_gen(uint8_t pk[BCM_SLHDSA_SHA2_128S_N],
   uint8_t tmp[SLHDSA_SHA2_128S_WOTS_BYTES];
   for (size_t i = 0; i < SLHDSA_SHA2_128S_WOTS_LEN; ++i) {
     slhdsa_wots_do_chain(tmp + i * BCM_SLHDSA_SHA2_128S_N, sk_addr, addr,
-                         SLHDSA_SHA2_128S_WOTS_W - 1, sk_seed, pub_seed, i);
+                         SLHDSA_SHA2_128S_WOTS_W - 1, sk_seed, pub_seed, (uint32_t)i);
   }
 
   // Compress pk

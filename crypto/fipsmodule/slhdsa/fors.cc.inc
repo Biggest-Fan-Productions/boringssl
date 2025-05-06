@@ -98,7 +98,7 @@ void slhdsa_fors_sign(uint8_t fors_sig[SLHDSA_SHA2_128S_FORS_BYTES],
     // Write the FORS secret key element to the correct position.
     slhdsa_fors_sk_gen(
         fors_sig + i * BCM_SLHDSA_SHA2_128S_N * (SLHDSA_SHA2_128S_FORS_HEIGHT + 1),
-        i * (1 << SLHDSA_SHA2_128S_FORS_HEIGHT) + indices[i], sk_seed, pk_seed,
+        (uint32_t)(i * (1 << SLHDSA_SHA2_128S_FORS_HEIGHT) + indices[i]), sk_seed, pk_seed,
         addr);
     for (size_t j = 0; j < SLHDSA_SHA2_128S_FORS_HEIGHT; ++j) {
       size_t s = (indices[i] / (1 << j)) ^ 1;
@@ -106,7 +106,7 @@ void slhdsa_fors_sign(uint8_t fors_sig[SLHDSA_SHA2_128S_FORS_BYTES],
       slhdsa_fors_treehash(
           fors_sig + BCM_SLHDSA_SHA2_128S_N *
                          (i * (SLHDSA_SHA2_128S_FORS_HEIGHT + 1) + j + 1),
-          sk_seed, i * (1ULL << (SLHDSA_SHA2_128S_FORS_HEIGHT - j)) + s, j,
+          sk_seed, (uint32_t)(i * (1ULL << (SLHDSA_SHA2_128S_FORS_HEIGHT - j)) + s), (uint32_t)j,
           pk_seed, addr);
     }
   }
@@ -136,12 +136,12 @@ void slhdsa_fors_pk_from_sig(
 
     slhdsa_set_tree_height(addr, 0);
     slhdsa_set_tree_index(
-        addr, (i * (1 << SLHDSA_SHA2_128S_FORS_HEIGHT)) + indices[i]);
+        addr, (uint32_t)((i * (1 << SLHDSA_SHA2_128S_FORS_HEIGHT)) + indices[i]));
 
     slhdsa_thash_f(nodes, sk, pk_seed, addr);
 
     for (size_t j = 0; j < SLHDSA_SHA2_128S_FORS_HEIGHT; ++j) {
-      slhdsa_set_tree_height(addr, j + 1);
+      slhdsa_set_tree_height(addr, (uint32_t)(j + 1));
 
       // Even node
       if (((indices[i] / (1 << j)) % 2) == 0) {

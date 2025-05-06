@@ -775,7 +775,7 @@ int i2d_SSL_SESSION(SSL_SESSION *in, uint8_t **pp) {
   }
   OPENSSL_free(out);
 
-  return len;
+  return (int)len;
 }
 
 SSL_SESSION *SSL_SESSION_from_bytes(const uint8_t *in, size_t in_len,
